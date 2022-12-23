@@ -18,13 +18,21 @@ export const useAuth = () => {
 
 export default function AuthContext({ children }) {
 
+    const url = 'https://rickandmortyapi.com/api/character';
+
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
+    const [jsonState, setjsonState] = useState();
+
     useEffect(() => {
         onAuthStateChanged(auth, currentUser => {
             setUser(currentUser);
             setLoading(false)
         })
+    }, []);
+
+    useEffect(() => {
+        getUserApi()
     }, [])
 
     const register = async (email, password) =>
@@ -39,7 +47,22 @@ export default function AuthContext({ children }) {
     };
 
     const logout = async () =>
-        await signOut(auth)
+        await signOut(auth);
+
+    const getUserApi = async () => {
+        const response = await fetch(url)
+        const responseJSON = await response.json()
+        let userObject = responseJSON.results.map((item) => {
+            return {
+                "id": item.id,
+                "name": item.name,
+                "montoInicial": 1000,
+                "prestamoPedido": 2000
+            }
+        })
+        const userJSON = JSON.stringify(userObject)
+        setjsonState(userJSON)
+    };
 
     return (
         <authContext.Provider
@@ -49,7 +72,8 @@ export default function AuthContext({ children }) {
                 logout,
                 login,
                 loading,
-                user
+                user,
+                jsonState
             }}
         >
             {children}
