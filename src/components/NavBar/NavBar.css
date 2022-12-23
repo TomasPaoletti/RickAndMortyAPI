@@ -1,0 +1,21 @@
+.navbar {
+    background-color: #202329;
+}
+
+.navbar-text {
+    color: white !important;
+}
+
+.navbar a {
+    text-decoration: none !important;
+}
+
+.navbar .btn {
+    background-color: #202329;
+    color: white;
+    border: none;
+}
+
+.navbar .btn:hover {
+    background-color: #202329;
+}

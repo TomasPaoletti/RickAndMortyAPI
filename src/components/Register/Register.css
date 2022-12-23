@@ -1,0 +1,18 @@
+.wrapper_register {
+    background-color: white;
+    border: solid 2px #202329;
+    border-radius: 10px;
+}
+
+.wrapper_register .btn {
+    background-color: #202329;
+    border: none;
+}
+
+.wrapper_register p{
+    color: red;
+}
+
+.wrapper_register .btn:hover {
+    background-color: #202329;
+}
