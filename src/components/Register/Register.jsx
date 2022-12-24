@@ -13,7 +13,7 @@ function Register() {
     });
     const [error, setError] = useState()
 
-    const {register, loginWithGoogle} = useAuth();
+    const {register} = useAuth();
     const navigate = useNavigate()
 
     const handleChange = ({ target: { name, value } }) => {
@@ -32,9 +32,6 @@ function Register() {
             }
         }
     }
-    const handleLogout = () => {
-        auth.logout()
-    };
 
     return (
         <Container>

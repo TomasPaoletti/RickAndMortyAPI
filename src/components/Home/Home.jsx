@@ -24,7 +24,7 @@ function Home() {
   return (
     <Container fluid>
       <Row className="justify-content-center">
-        <Col sm={6}>
+        <Col sm={8}>
           <h1 className='text-center'>Usuarios disponibles</h1>
           <AvailableUsers />
         </Col>

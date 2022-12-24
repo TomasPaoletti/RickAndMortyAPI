@@ -8,6 +8,7 @@ import {
     signOut,
     onAuthStateChanged
 } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 
 const authContext = createContext();
@@ -23,6 +24,10 @@ export default function AuthContext({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [jsonState, setjsonState] = useState();
+    const [list, setList] = useState();
+    const [userDetail, setUserDetail] = useState();
+    const [modalTransfer, setModalTransfer] = useState(false);
+    const [modalDeposit, setModalDeposit] = useState(false);
 
     useEffect(() => {
         onAuthStateChanged(auth, currentUser => {
@@ -56,13 +61,38 @@ export default function AuthContext({ children }) {
             return {
                 "id": item.id,
                 "name": item.name,
-                "montoInicial": 1000,
-                "prestamoPedido": 2000
+                "montoInicial": 0,
+                "prestamoPedido": 0
             }
         })
         const userJSON = JSON.stringify(userObject)
         setjsonState(userJSON)
     };
+
+    const userList = () => {
+        const response = JSON.parse(jsonState)
+        setList(response)
+    };
+
+    const getUserDetail = (id) => {
+        setUserDetail(list.find(x => x.id == id))
+    };
+
+    const handleShowModalTransfer = () => setModalTransfer(true)
+    const handleCloseModalTransfer = () => setModalTransfer(false)
+    const handleShowModalDeposit = () => setModalDeposit(true)
+    const handleCloseModalDeposit = () => setModalDeposit(false)
+
+    const getMontoInicial = async (price, id) => {
+        list.map((item) => {
+            if (item.id == id) {
+                item.montoInicial = parseInt(price)
+            }
+            return list
+        })
+        const userJSON = JSON.stringify(list)
+        setjsonState(userJSON)
+    }
 
     return (
         <authContext.Provider
@@ -73,7 +103,18 @@ export default function AuthContext({ children }) {
                 login,
                 loading,
                 user,
-                jsonState
+                jsonState,
+                userList,
+                list,
+                getMontoInicial,
+                getUserDetail,
+                userDetail,
+                handleShowModalTransfer,
+                handleCloseModalTransfer,
+                handleShowModalDeposit,
+                handleCloseModalDeposit,
+                modalTransfer,
+                modalDeposit
             }}
         >
             {children}
