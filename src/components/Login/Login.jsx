@@ -44,7 +44,7 @@ function Login() {
     return (
         <Container>
             <Row className="justify-content-center py-5">
-                <Col sm={6} className='wrapper_register'>
+                <Col sm={4} className='wrapper_register'>
                     <h2 className='text-center pt-3'>Iniciar sesión</h2>
                     {error && <p>{error}</p>}
                     <Form onSubmit={handleRegister}>

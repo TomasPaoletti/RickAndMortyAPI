@@ -16,11 +16,9 @@ export default function NavBar() {
         return <Navbar>
             <Container fluid>
                 <NavbarCollapse className="justify-content-between">
-                    <Link to="/login">
                         <Navbar.Text>
                             {user.displayName || user.email}
                         </Navbar.Text>
-                    </Link>
                     <Button onClick={() => handleLogout()}>Cerrar sesión</Button>
                 </NavbarCollapse>
             </Container>

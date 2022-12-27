@@ -3,9 +3,9 @@ import { Button, FormControl, Modal, ModalBody, ModalFooter, ModalHeader, ModalT
 import { useAuth } from '../../context/AuthContext';
 import "./Modals.css"
 
-function ModalDeposit() {
+function ModalWithdraw() {
 
-    const { modalDeposit, handleCloseModalDeposit, getCredit, modalId } = useAuth();
+    const { modalWithdraw, handleCloseModalWithdraw, getWithdraw, modalId } = useAuth();
     const [price, setPrice] = useState({
         "montoInicial": ""
     })
@@ -17,19 +17,19 @@ function ModalDeposit() {
         }))
     };
 
-    const handleDeposit = async () => {
-        await getCredit(price.montoInicial, modalId)
-        handleCloseModalDeposit()
+    const handleWithdraw = async () => {
+        await getWithdraw(price.montoInicial, modalId)
+        handleCloseModalWithdraw()
         setPrice({
             "montoInicial": ""
         })
     }
 
     return (
-        <Modal show={modalDeposit}>
+        <Modal show={modalWithdraw}>
             <ModalHeader>
                 <ModalTitle>
-                    Acreditar dinero
+                    Retirar dinero
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
@@ -41,11 +41,11 @@ function ModalDeposit() {
                     min="0" />
             </ModalBody>
             <ModalFooter>
-                <Button variant='primary' onClick={handleDeposit}>Acreditar</Button>
-                <Button variant='secondary' onClick={handleCloseModalDeposit}>Cerrar</Button>
+                <Button variant='primary' onClick={handleWithdraw}>Acreditar</Button>
+                <Button variant='secondary' onClick={handleCloseModalWithdraw}>Cerrar</Button>
             </ModalFooter>
         </Modal>
     )
 }
 
-export default ModalDeposit
+export default ModalWithdraw

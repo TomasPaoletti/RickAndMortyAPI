@@ -1,24 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'
 import AvailableUsers from '../AvailableUsers/AvailableUsers';
 
 function Home() {
 
   const { loading, user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() =>{
+    if (!loading && !user){
+      return navigate("/login")
+    }
+  }, [loading, user])
 
   if (loading === true) {
     return <h1>Cargando...</h1>
-  }
-
-  if (user === null) {
-    return <Container fluid>
-      <Row className="justify-content-center">
-        <Col>
-          <h1>Inicia sesión para empezar a interactuar</h1>
-        </Col>
-      </Row>
-    </Container>
   }
 
   return (

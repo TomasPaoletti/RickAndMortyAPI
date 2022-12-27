@@ -8,7 +8,7 @@ import {
     signOut,
     onAuthStateChanged
 } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import API from '../API';
 
 
 const authContext = createContext();
@@ -19,15 +19,14 @@ export const useAuth = () => {
 
 export default function AuthContext({ children }) {
 
-    const url = 'https://rickandmortyapi.com/api/character';
-
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [jsonState, setjsonState] = useState();
     const [list, setList] = useState();
-    const [userDetail, setUserDetail] = useState();
     const [modalTransfer, setModalTransfer] = useState(false);
     const [modalDeposit, setModalDeposit] = useState(false);
+    const [modalWithdraw, setModalWithdraw] = useState(false)
+    const [modalId, setModalId] = useState();
 
     useEffect(() => {
         onAuthStateChanged(auth, currentUser => {
@@ -55,9 +54,8 @@ export default function AuthContext({ children }) {
         await signOut(auth);
 
     const getUserApi = async () => {
-        const response = await fetch(url)
-        const responseJSON = await response.json()
-        let userObject = responseJSON.results.map((item) => {
+        const characters = await API.getCharacters()
+        let userObject = characters.results.map((item) => {
             return {
                 "id": item.id,
                 "name": item.name,
@@ -74,19 +72,60 @@ export default function AuthContext({ children }) {
         setList(response)
     };
 
-    const getUserDetail = (id) => {
-        setUserDetail(list.find(x => x.id == id))
-    };
-
-    const handleShowModalTransfer = () => setModalTransfer(true)
+    const handleShowModalTransfer = (id) => {
+        setModalTransfer(true)
+        setModalId(id)
+    }
     const handleCloseModalTransfer = () => setModalTransfer(false)
-    const handleShowModalDeposit = () => setModalDeposit(true)
+
+    const handleShowModalDeposit = (id) => {
+        setModalDeposit(true)
+        setModalId(id)
+    }
     const handleCloseModalDeposit = () => setModalDeposit(false)
 
-    const getMontoInicial = async (price, id) => {
+    const handleShowModalWithdraw = (id) => {
+        setModalWithdraw(true)
+        setModalId(id)
+    }
+    const handleCloseModalWithdraw = () => setModalWithdraw(false)
+
+    const getCredit = (price, idUser) => {
         list.map((item) => {
-            if (item.id == id) {
-                item.montoInicial = parseInt(price)
+            if (item.id == idUser) {
+                item.montoInicial = item.montoInicial + parseInt(price)
+            }
+            return list
+        })
+        const userJSON = JSON.stringify(list)
+        setjsonState(userJSON)
+    }
+
+    const getTransfer = (price, idTransfer, idUser) => {
+        let rest = true
+        list.map((item) => {
+            if (item.id == idUser) {
+                item.montoInicial > parseInt(price) ? item.montoInicial = item.montoInicial - parseInt(price) : rest = false
+            }
+            return list
+        })
+        if (rest == true) {
+            list.map((item) => {
+                if (item.id == idTransfer) {
+                    item.montoInicial = item.montoInicial + parseInt(price)
+                }
+            })
+        } else {
+            console.log("error")
+        }
+        const userJSON = JSON.stringify(list)
+        setjsonState(userJSON)
+    }
+
+    const getWithdraw = (price, idUser) => {
+        list.map((item) => {
+            if (item.id == idUser) {
+                item.montoInicial > parseInt(price) ? item.montoInicial = item.montoInicial - parseInt(price) : console.log("error")
             }
             return list
         })
@@ -106,15 +145,19 @@ export default function AuthContext({ children }) {
                 jsonState,
                 userList,
                 list,
-                getMontoInicial,
-                getUserDetail,
-                userDetail,
+                getCredit,
+                getTransfer,
+                getWithdraw,
                 handleShowModalTransfer,
                 handleCloseModalTransfer,
                 handleShowModalDeposit,
+                handleShowModalWithdraw,
                 handleCloseModalDeposit,
+                handleCloseModalWithdraw,
                 modalTransfer,
-                modalDeposit
+                modalDeposit,
+                modalWithdraw,
+                modalId
             }}
         >
             {children}
