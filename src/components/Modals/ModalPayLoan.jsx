@@ -13,12 +13,12 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import "./Modals.css"
 
-function ModalWithdraw() {
+function ModalPayLoan() {
 
-    const { modalWithdraw, handleCloseModalWithdraw, getWithdraw, modalId } = useAuth();
+    const { modalPayLoan, handleCloseModalPayLoan, getPayLoan, modalId } = useAuth();
     const [price, setPrice] = useState({
-        "withdraWals": ""
-    })
+        "payLoan": ""
+    });
 
     const priceChange = ({ target: { name, value } }) => {
         setPrice(currentValue => ({
@@ -27,39 +27,39 @@ function ModalWithdraw() {
         }))
     };
 
-    const handleWithdraw = async () => {
-        await getWithdraw(parseInt(price.withdraWals), modalId)
-        handleCloseModalWithdraw()
+    const handlePayLoan = async () => {
+        await getPayLoan(parseInt(price.payLoan), modalId)
+        handleCloseModalPayLoan()
         setPrice({
-            "withdraWals": ""
+            "payLoan": ""
         })
-    }
+    };
 
     return (
-        <Modal show={modalWithdraw}>
+        <Modal show={modalPayLoan}>
             <ModalHeader>
                 <ModalTitle>
-                    Retirar dinero
+                    Pagar prestamo
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
                 <FormGroup>
-                    <FormLabel htmlFor='withdraWals'>Dinero a retirar</FormLabel>
+                    <FormLabel htmlFor='payLoan'>Dinero que desea enviar</FormLabel>
                     <FormControl
-                        id='withdraWals'
+                        id='payLoan'
                         type='number'
-                        name="withdraWals"
-                        value={price.withdraWals}
+                        name="payLoan"
+                        value={price.payLoan}
                         onChange={priceChange}
                         min="0" />
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button variant='primary' onClick={handleWithdraw}>Retirar</Button>
-                <Button variant='secondary' onClick={handleCloseModalWithdraw}>Cerrar</Button>
+                <Button variant='primary' onClick={handlePayLoan}>Pagar</Button>
+                <Button variant='secondary' onClick={handleCloseModalPayLoan}>Cerrar</Button>
             </ModalFooter>
         </Modal>
     )
 }
 
-export default ModalWithdraw
+export default ModalPayLoan

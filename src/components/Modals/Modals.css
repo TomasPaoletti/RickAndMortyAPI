@@ -1,5 +1,17 @@
-.btn{
-    background-color: #202329 !important;
-    color: white !important;
-    border: none !important;
+.modal-dialog .btn{
+    background-color: #0C6291;
+    color: white;
+    border: none;
+}
+
+.modal .btn:hover {
+    background-color: #073c58;
+}
+
+.modal .btn-secondary{
+    background-color: #202329;
+}
+
+.modal .btn-secondary:hover {
+    background-color: #202329;
 }

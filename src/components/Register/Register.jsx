@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Button, Col, Container, Form, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../Loader/Loader';
+import Swal from 'sweetalert2';
 import './Register.css'
 
 
@@ -12,9 +14,16 @@ function Register() {
         password: ""
     });
     const [error, setError] = useState()
-
-    const {register} = useAuth();
-    const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
+    const { register } = useAuth();
+    const navigate = useNavigate();
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+    });
 
     const handleChange = ({ target: { name, value } }) => {
         setUser({ ...user, [name]: value })
@@ -23,14 +32,25 @@ function Register() {
     const handleRegister = async (e) => {
         e.preventDefault()
         setError("")
+        setLoading(true)
         try {
             await register(user.email, user.password)
+            setLoading(false)
             navigate("/")
+            Toast.fire({
+                title: "Registrado correctamente",
+                icon: "success",
+            })
         } catch (error) {
+            setLoading(false)
             if (error.code === "auth/email-already-in-use") {
                 setError("Este correo ya esta registrado")
             }
         }
+    }
+
+    if (loading === true) {
+        return <Loader />
     }
 
     return (

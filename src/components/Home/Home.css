@@ -1,0 +1,9 @@
+.home .btn{
+    background-color: #0C6291;
+    color: white;
+    border: none;
+}
+
+.home .btn:hover {
+    background-color: #073c58;
+}

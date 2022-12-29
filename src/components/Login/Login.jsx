@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Button, Col, Container, Form, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-
+import Loader from '../Loader/Loader';
+import Swal from 'sweetalert2';
 
 function Login() {
 
@@ -11,9 +12,16 @@ function Login() {
         password: ""
     });
     const [error, setError] = useState()
-
+    const [loading, setLoading] = useState(false)
     const { login, loginWithGoogle } = useAuth();
     const navigate = useNavigate()
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+    });
 
     const handleChange = ({ target: { name, value } }) => {
         setUser({ ...user, [name]: value })
@@ -22,10 +30,17 @@ function Login() {
     const handleRegister = async (e) => {
         e.preventDefault()
         setError("")
+        setLoading(true)
         try {
             await login(user.email, user.password)
+            setLoading(false)
             navigate("/")
+            Toast.fire({
+                title: "Ingreso correcto",
+                icon: "success",
+            })
         } catch (error) {
+            setLoading(false)
             if (error.code === "auth/wrong-password") {
                 setError("Contrseña incorrecta")
             }
@@ -41,6 +56,9 @@ function Login() {
         navigate("/")
     };
 
+    if (loading === true) {
+        return <Loader />
+    }
     return (
         <Container>
             <Row className="justify-content-center py-5">

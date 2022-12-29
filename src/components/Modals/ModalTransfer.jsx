@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { Button, Form, FormControl, FormSelect, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from 'react-bootstrap';
+import {
+    Button,
+    FormControl,
+    FormGroup,
+    FormLabel,
+    FormSelect,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    ModalTitle
+} from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import "./Modals.css"
 
@@ -8,24 +19,32 @@ function ModalTransfer() {
     const { modalTransfer, handleCloseModalTransfer, modalId, list, getTransfer } = useAuth();
     const [price, setPrice] = useState({
         "montoTransferir": "",
-        "id": "1"
+        "id": "",
+        "buttonDisabled": true
     })
 
     const priceChange = ({ target: { name, value } }) => {
         setPrice(currentValue => ({
             ...currentValue,
-            [name]: value
+            [name]: value,
         }))
+        if (price.id != "" && montoTransferir != ""){
+            setPrice(currentValue =>({
+                ...currentValue,
+                buttonDisabled: false
+            }))
+        }
     };
 
     const handleTransfer = async () => {
-        await getTransfer(price.montoTransferir, price.id, modalId)
+        await getTransfer(parseInt(price.montoTransferir), parseInt(price.id), modalId)
         handleCloseModalTransfer()
         setPrice({
             "montoTransferir": "",
-            "id": "1"
+            "id": ""
         })
     }
+    
     return (
         <Modal show={modalTransfer}>
             <ModalHeader>
@@ -33,35 +52,42 @@ function ModalTransfer() {
                     Transferir dinero
                 </ModalTitle>
             </ModalHeader>
-            <Form>
                 <ModalBody>
-                    <FormControl
-                        type='number'
-                        name="montoTransferir"
-                        value={price.montoTransferir}
-                        onChange={priceChange}
-                        min="0" />
-                    <FormSelect
-                        size="sm"
-                        name='id'
-                        value={price.id}
-                        onChange={priceChange}
-                    >
-                        {list.map((item) => {
-                            return <option
-                                key={item.id}
-                                value={item.id}
-                            >
-                                {item.name}
-                            </option>
-                        })}
-                    </FormSelect>
+                    <FormGroup>
+                        <FormLabel htmlFor='montoTransferir'>Dinero a transferir</FormLabel>
+                        <FormControl
+                            id='montoTransferir'
+                            type='number'
+                            name="montoTransferir"
+                            value={price.montoTransferir}
+                            onChange={priceChange}
+                            min="0" />
+                    </FormGroup>
+                    <FormGroup className='mt-2'>
+                        <FormLabel htmlFor='user'>Usuario</FormLabel>
+                        <FormSelect
+                            id='user'
+                            size="sm"
+                            name='id'
+                            value={price.id}
+                            onChange={priceChange}
+                        >
+                        <option>Elegir una usuario</option>
+                            {list.map((item) => {
+                                return <option
+                                    key={item.id}
+                                    value={item.id}
+                                >
+                                    {item.name}
+                                </option>
+                            })}
+                        </FormSelect>
+                    </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button variant='primary' onClick={handleTransfer}>Transferir</Button>
+                    <Button variant='primary' onClick={handleTransfer} disabled={price.buttonDisabled}>Transferir</Button>
                     <Button variant='secondary' onClick={handleCloseModalTransfer}>Cerrar</Button>
                 </ModalFooter>
-            </Form>
         </Modal>
     )
 }

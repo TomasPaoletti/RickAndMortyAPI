@@ -6,10 +6,10 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
 } from 'firebase/auth';
 import API from '../API';
-
+import Swal from 'sweetalert2';
 
 const authContext = createContext();
 export const useAuth = () => {
@@ -25,8 +25,17 @@ export default function AuthContext({ children }) {
     const [list, setList] = useState();
     const [modalTransfer, setModalTransfer] = useState(false);
     const [modalDeposit, setModalDeposit] = useState(false);
-    const [modalWithdraw, setModalWithdraw] = useState(false)
+    const [modalWithdraw, setModalWithdraw] = useState(false);
+    const [modalLoan, setModalLoan] = useState(false);
+    const [modalPayLoan, setModalPayLoan] = useState(false);
     const [modalId, setModalId] = useState();
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+    });
 
     useEffect(() => {
         onAuthStateChanged(auth, currentUser => {
@@ -89,48 +98,121 @@ export default function AuthContext({ children }) {
         setModalId(id)
     }
     const handleCloseModalWithdraw = () => setModalWithdraw(false)
+    const handleShowModalLoan = (id) => {
+        setModalLoan(true)
+        setModalId(id)
+    }
+    const handleCloseModalLoan = () => setModalLoan(false)
+    const handleShowModalPayLoan = (id) => {
+        setModalPayLoan(true)
+        setModalId(id)
+    }
+    const handleCloseModalPayLoan = () => setModalPayLoan(false)
 
     const getCredit = (price, idUser) => {
-        list.map((item) => {
-            if (item.id == idUser) {
-                item.montoInicial = item.montoInicial + parseInt(price)
-            }
-            return list
-        })
-        const userJSON = JSON.stringify(list)
-        setjsonState(userJSON)
+        const indexDelete = idUser - 1
+        try {
+            const user = list.find(x => x.id == idUser)
+            user.montoInicial = user.montoInicial + price
+            list.splice(indexDelete, 1, user)
+            const userJSON = JSON.stringify(list)
+            setjsonState(userJSON)
+            Toast.fire({
+                title: "Dinero acreditado",
+                icon: "success",
+            })
+        } catch {
+            Toast.fire({
+                title: "Error inesperado",
+                icon: "error",
+            })
+        }
     }
 
     const getTransfer = (price, idTransfer, idUser) => {
-        let rest = true
-        list.map((item) => {
-            if (item.id == idUser) {
-                item.montoInicial > parseInt(price) ? item.montoInicial = item.montoInicial - parseInt(price) : rest = false
-            }
-            return list
-        })
-        if (rest == true) {
-            list.map((item) => {
-                if (item.id == idTransfer) {
-                    item.montoInicial = item.montoInicial + parseInt(price)
-                }
+        const indexDeleteUser = idUser - 1
+        const indexDeleteTransfer = idTransfer - 1
+        const user = list.find(x => x.id === idUser)
+        const userTransfer = list.find(x => x.id === idTransfer)
+        if (user.montoInicial >= price && userTransfer != undefined){
+            user.montoInicial = user.montoInicial - price
+            userTransfer.montoInicial = userTransfer.montoInicial + price
+            list.splice(indexDeleteUser, 1, user)
+            list.splice(indexDeleteTransfer, 1, userTransfer)
+            const userJSON = JSON.stringify(list)
+            setjsonState(userJSON)
+            Toast.fire({
+                title: "Dinero transferido",
+                icon: "success",
             })
-        } else {
-            console.log("error")
+        }else{
+            Toast.fire({
+                title: "Dinero insuficiente",
+                icon: "error",
+            })
         }
-        const userJSON = JSON.stringify(list)
-        setjsonState(userJSON)
     }
 
     const getWithdraw = (price, idUser) => {
-        list.map((item) => {
-            if (item.id == idUser) {
-                item.montoInicial > parseInt(price) ? item.montoInicial = item.montoInicial - parseInt(price) : console.log("error")
-            }
-            return list
-        })
-        const userJSON = JSON.stringify(list)
-        setjsonState(userJSON)
+        const indexDelete = idUser - 1
+        const user = list.find(x => x.id == idUser)
+        if (user.montoInicial >= price) {
+            user.montoInicial = user.montoInicial - price
+            list.splice(indexDelete, 1, user)
+            const userJSON = JSON.stringify(list)
+            setjsonState(userJSON)
+            Toast.fire({
+                title: "Dinero retirado",
+                icon: "success",
+            })
+        } else {
+            Toast.fire({
+                title: "Dinero insuficiente",
+                icon: "error",
+            })
+        }
+    }
+
+    const getLoan = (price, idUser) => {
+        const indexDelete = idUser - 1
+        try {
+            const user = list.find(x => x.id == idUser)
+            user.prestamoPedido = user.prestamoPedido + price
+            user.montoInicial = user.montoInicial + price
+            list.splice(indexDelete, 1, user)
+            const userJSON = JSON.stringify(list)
+            setjsonState(userJSON)
+            Toast.fire({
+                title: "Prestamo solicitado",
+                icon: "success",
+            })
+        } catch {
+            Toast.fire({
+                title: "Error al solicitar el prestamo",
+                icon: "error",
+            })
+        }
+    }
+
+    const getPayLoan = (price, idUser) => {
+        const indexDelete = idUser - 1
+        const user = list.find(x => x.id == idUser)
+        if (user.montoInicial >= price && user.prestamoPedido > 0) {
+            user.montoInicial = user.montoInicial - price
+            user.prestamoPedido = user.prestamoPedido - price
+            list.splice(indexDelete, 1, user)
+            const userJSON = JSON.stringify(list)
+            setjsonState(userJSON)
+            Toast.fire({
+                title: "Cuota pagada",
+                icon: "success",
+            })
+        } else {
+            Toast.fire({
+                title: "Error",
+                icon: "error",
+            })
+        }
     }
 
     return (
@@ -148,15 +230,23 @@ export default function AuthContext({ children }) {
                 getCredit,
                 getTransfer,
                 getWithdraw,
+                getLoan,
+                getPayLoan,
                 handleShowModalTransfer,
                 handleCloseModalTransfer,
                 handleShowModalDeposit,
                 handleShowModalWithdraw,
                 handleCloseModalDeposit,
                 handleCloseModalWithdraw,
+                handleShowModalLoan,
+                handleCloseModalLoan,
+                handleShowModalPayLoan,
+                handleCloseModalPayLoan,
                 modalTransfer,
                 modalDeposit,
                 modalWithdraw,
+                modalLoan,
+                modalPayLoan,
                 modalId
             }}
         >

@@ -8,6 +8,9 @@ import { FaMoneyBill } from "react-icons/fa";
 import ModalDeposit from '../Modals/ModalDeposit';
 import ModalTransfer from '../Modals/ModalTransfer';
 import ModalWithdraw from '../Modals/ModalWithdraw';
+import ModalLoan from '../Modals/ModalLoan';
+import ModalPayLoan from '../Modals/ModalPayLoan';
+import Loader from '../Loader/Loader';
 
 function AvailableUsers() {
 
@@ -15,14 +18,16 @@ function AvailableUsers() {
         userList,
         handleShowModalDeposit,
         handleShowModalTransfer,
-        handleShowModalWithdraw } = useAuth();
+        handleShowModalWithdraw,
+        handleShowModalLoan,
+        handleShowModalPayLoan } = useAuth();
 
     useEffect(() => {
         userList()
     }, [])
 
     if (list == null) {
-        return <h1>cargando</h1>
+        return <Loader />
     }
 
     return (
@@ -40,7 +45,7 @@ function AvailableUsers() {
                     {list.map((item) => {
                         return <tr className='text-center' key={item.id}>
                             <td>{item.name}</td>
-                            <td>€{item.montoInicial + item.prestamoPedido}</td>
+                            <td>€{item.montoInicial}</td>
                             <td>€{item.prestamoPedido}</td>
                             <td>
                                 <Row>
@@ -77,7 +82,7 @@ function AvailableUsers() {
                                             variant="dark"
                                             title='Pedir prestamo'
                                             size="sm"
-                                            onClick={handleShowModalDeposit}
+                                            onClick={() => handleShowModalLoan(item.id)}
                                         >
                                             <FaMoneyBill />
                                         </Button>
@@ -86,7 +91,7 @@ function AvailableUsers() {
                                             variant="info"
                                             title='Pagar prestamo'
                                             size="sm"
-                                            onClick={handleShowModalDeposit}
+                                            onClick={() => handleShowModalPayLoan(item.id)}
                                         >
                                             <GiPayMoney />
                                         </Button>
@@ -100,6 +105,8 @@ function AvailableUsers() {
             <ModalDeposit />
             <ModalTransfer />
             <ModalWithdraw />
+            <ModalLoan />
+            <ModalPayLoan />
         </>
     )
 }

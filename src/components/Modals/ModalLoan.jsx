@@ -13,12 +13,12 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import "./Modals.css"
 
-function ModalWithdraw() {
+function modalLoan() {
 
-    const { modalWithdraw, handleCloseModalWithdraw, getWithdraw, modalId } = useAuth();
+    const { modalLoan, handleCloseModalLoan, getLoan, modalId } = useAuth();
     const [price, setPrice] = useState({
-        "withdraWals": ""
-    })
+        "loan": ""
+    });
 
     const priceChange = ({ target: { name, value } }) => {
         setPrice(currentValue => ({
@@ -27,39 +27,39 @@ function ModalWithdraw() {
         }))
     };
 
-    const handleWithdraw = async () => {
-        await getWithdraw(parseInt(price.withdraWals), modalId)
-        handleCloseModalWithdraw()
+    const handleLoan = async () => {
+        await getLoan(parseInt(price.loan), modalId)
+        handleCloseModalLoan()
         setPrice({
-            "withdraWals": ""
+            "loan": ""
         })
-    }
+    };
 
     return (
-        <Modal show={modalWithdraw}>
+        <Modal show={modalLoan}>
             <ModalHeader>
                 <ModalTitle>
-                    Retirar dinero
+                    Solicitar prestamo
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
                 <FormGroup>
-                    <FormLabel htmlFor='withdraWals'>Dinero a retirar</FormLabel>
+                    <FormLabel htmlFor='loan'>Dinero a solicitar</FormLabel>
                     <FormControl
-                        id='withdraWals'
+                        id='loan'
                         type='number'
-                        name="withdraWals"
-                        value={price.withdraWals}
+                        name="loan"
+                        value={price.loan}
                         onChange={priceChange}
                         min="0" />
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button variant='primary' onClick={handleWithdraw}>Retirar</Button>
-                <Button variant='secondary' onClick={handleCloseModalWithdraw}>Cerrar</Button>
+                <Button variant='primary' onClick={handleLoan}>Solicitar</Button>
+                <Button variant='secondary' onClick={handleCloseModalLoan}>Cerrar</Button>
             </ModalFooter>
         </Modal>
     )
 }
 
-export default ModalWithdraw
+export default modalLoan

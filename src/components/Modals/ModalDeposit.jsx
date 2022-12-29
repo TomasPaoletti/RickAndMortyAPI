@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Button, FormControl, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from 'react-bootstrap';
+import {
+    Button,
+    FormControl,
+    FormGroup,
+    FormLabel,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    ModalTitle
+} from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import "./Modals.css"
 
@@ -18,33 +28,40 @@ function ModalDeposit() {
     };
 
     const handleDeposit = async () => {
-        await getCredit(price.montoInicial, modalId)
+        await getCredit(parseInt(price.montoInicial), modalId)
         handleCloseModalDeposit()
         setPrice({
             "montoInicial": ""
         })
+        
     }
 
     return (
-        <Modal show={modalDeposit}>
-            <ModalHeader>
-                <ModalTitle>
-                    Acreditar dinero
-                </ModalTitle>
-            </ModalHeader>
-            <ModalBody>
-                <FormControl
-                    type='number'
-                    name="montoInicial"
-                    value={price.montoInicial}
-                    onChange={priceChange}
-                    min="0" />
-            </ModalBody>
-            <ModalFooter>
-                <Button variant='primary' onClick={handleDeposit}>Acreditar</Button>
-                <Button variant='secondary' onClick={handleCloseModalDeposit}>Cerrar</Button>
-            </ModalFooter>
-        </Modal>
+        <>
+            <Modal show={modalDeposit}>
+                <ModalHeader>
+                    <ModalTitle>
+                        Acreditar dinero
+                    </ModalTitle>
+                </ModalHeader>
+                <ModalBody>
+                    <FormGroup>
+                        <FormLabel htmlFor='montoInicial'>Dinero a depositar</FormLabel>
+                        <FormControl
+                            type='number'
+                            id='montoInicial'
+                            name="montoInicial"
+                            value={price.montoInicial}
+                            onChange={priceChange}
+                            min="0" />
+                    </FormGroup>
+                </ModalBody>
+                <ModalFooter>
+                    <Button variant='primary' onClick={handleDeposit}>Acreditar</Button>
+                    <Button variant='secondary' onClick={handleCloseModalDeposit}>Cerrar</Button>
+                </ModalFooter>
+            </Modal>
+        </>
     )
 }
 

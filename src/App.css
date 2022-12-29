@@ -5,9 +5,3 @@
 .App{
     min-height: 100vh;
 }
-
-.App .btn{
-    background-color: #202329;
-    color: white;
-    border: none;
-}
