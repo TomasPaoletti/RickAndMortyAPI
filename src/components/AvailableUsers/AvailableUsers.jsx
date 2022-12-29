@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Button, Col, Row, Table } from 'react-bootstrap';
+import { Col, Row, Table } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { BsArrowLeftRight } from "react-icons/bs";
 import { GiReceiveMoney, GiPayMoney } from "react-icons/gi";
 import { FaMoneyBill } from "react-icons/fa";
+import ActionButtons from './ActionButtons';
 import ModalDeposit from '../Modals/ModalDeposit';
 import ModalTransfer from '../Modals/ModalTransfer';
 import ModalWithdraw from '../Modals/ModalWithdraw';
@@ -24,20 +25,21 @@ function AvailableUsers() {
 
     useEffect(() => {
         userList()
-    }, [])
+    }, []);
 
     if (list == null) {
         return <Loader />
-    }
+    };
 
     return (
         <>
+            <h1 className='text-center'>Usuarios disponibles</h1>
             <Table bordered hover>
                 <thead>
                     <tr className='text-center'>
                         <th>Nombre</th>
                         <th>Dinero en cuenta</th>
-                        <th>Prestamo pedido</th>
+                        <th>Préstamo pedido</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -50,51 +52,38 @@ function AvailableUsers() {
                             <td>
                                 <Row>
                                     <Col>
-                                        <Button
-                                            className='m-1'
+                                        <ActionButtons
                                             variant="primary"
-                                            title='Consignacion'
-                                            size="sm"
-                                            onClick={() => handleShowModalDeposit(item.id)}
-                                        >
+                                            title="Consignación"
+                                            onClick={() => handleShowModalDeposit(item.id)}>
                                             <AiOutlineArrowDown />
-                                        </Button>
-                                        <Button
-                                            className='m-1'
+                                        </ActionButtons>
+                                        <ActionButtons
                                             variant="secondary"
-                                            title='Transferencia'
-                                            size="sm"
-                                            onClick={() => handleShowModalTransfer(item.id)}
-                                        >
+                                            title="Transferencia"
+                                            onClick={() => handleShowModalTransfer(item.id)}>
                                             <BsArrowLeftRight />
-                                        </Button>
-                                        <Button
-                                            className='m-1'
+                                        </ActionButtons>
+                                        <ActionButtons
                                             variant="light"
                                             title='Retirar dinero'
-                                            size="sm"
-                                            onClick={() => handleShowModalWithdraw(item.id)}
-                                        >
+                                            onClick={() => handleShowModalWithdraw(item.id)}>
                                             <GiReceiveMoney />
-                                        </Button>
-                                        <Button
-                                            className='m-1'
+                                        </ActionButtons>
+                                        <ActionButtons
                                             variant="dark"
-                                            title='Pedir prestamo'
-                                            size="sm"
+                                            title='Pedir préstamo'
                                             onClick={() => handleShowModalLoan(item.id)}
                                         >
                                             <FaMoneyBill />
-                                        </Button>
-                                        <Button
-                                            className='m-1'
+                                        </ActionButtons>
+                                        <ActionButtons
                                             variant="info"
-                                            title='Pagar prestamo'
-                                            size="sm"
+                                            title='Pagar préstamo'
                                             onClick={() => handleShowModalPayLoan(item.id)}
                                         >
                                             <GiPayMoney />
-                                        </Button>
+                                        </ActionButtons>
                                     </Col>
                                 </Row>
                             </td>

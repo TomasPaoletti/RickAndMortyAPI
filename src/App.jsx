@@ -1,7 +1,7 @@
 import Provider from './context/AuthContext'
 import NavBar from './components/NavBar/NavBar';
 import Home from './components/Home/Home';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
 import 'bootstrap/dist/css/bootstrap.css';

@@ -13,10 +13,11 @@ function Register() {
         email: "",
         password: ""
     });
-    const [error, setError] = useState()
-    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState();
+    const [loading, setLoading] = useState(false);
     const { register } = useAuth();
     const navigate = useNavigate();
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -26,8 +27,11 @@ function Register() {
     });
 
     const handleChange = ({ target: { name, value } }) => {
-        setUser({ ...user, [name]: value })
-    }
+        setUser(currentValue => ({
+            ...currentValue,
+            [name]: value
+        }))
+    };
 
     const handleRegister = async (e) => {
         e.preventDefault()
@@ -44,24 +48,24 @@ function Register() {
         } catch (error) {
             setLoading(false)
             if (error.code === "auth/email-already-in-use") {
-                setError("Este correo ya esta registrado")
+                setError("Este correo ya está registrado")
             }
         }
-    }
+    };
 
     if (loading === true) {
         return <Loader />
-    }
+    };
 
     return (
         <Container>
             <Row className="justify-content-center py-5">
-                <Col sm={4} className='wrapper_register'>
+                <Col md={5} xs={8} lg={3} className='wrapper_register'>
                     <h2 className='text-center pt-3'>Registrarse</h2>
                     {error && <p>{error}</p>}
                     <Form onSubmit={handleRegister}>
                         <Form.Group className='pb-3'>
-                            <Form.Label>Correo electronico</Form.Label>
+                            <Form.Label>Correo electrónico</Form.Label>
                             <Form.Control
                                 type='email'
                                 name='email'

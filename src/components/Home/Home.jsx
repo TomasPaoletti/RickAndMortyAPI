@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import React, { useEffect } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/AuthContext';
 import AvailableUsers from '../AvailableUsers/AvailableUsers';
 import Loader from '../Loader/Loader';
-import "./Home.css"
+import "./Home.css";
 
 function Home() {
 
@@ -15,17 +15,16 @@ function Home() {
     if (!loading && !user) {
       return navigate("/login")
     }
-  }, [loading, user])
+  }, [loading, user]);
 
   if (loading === true) {
     return <Loader />
-  }
+  };
 
   return (
     <Container fluid className='home'>
       <Row className="justify-content-center">
         <Col sm={8}>
-          <h1 className='text-center'>Usuarios disponibles</h1>
           <AvailableUsers />
         </Col>
       </Row>

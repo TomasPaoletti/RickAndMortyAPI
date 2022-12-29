@@ -11,14 +11,14 @@ import {
     ModalTitle
 } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
-import "./Modals.css"
+import "./Modals.css";
 
 function ModalWithdraw() {
 
     const { modalWithdraw, handleCloseModalWithdraw, getWithdraw, modalId } = useAuth();
     const [price, setPrice] = useState({
         "withdraWals": ""
-    })
+    });
 
     const priceChange = ({ target: { name, value } }) => {
         setPrice(currentValue => ({
@@ -33,7 +33,7 @@ function ModalWithdraw() {
         setPrice({
             "withdraWals": ""
         })
-    }
+    };
 
     return (
         <Modal show={modalWithdraw}>
@@ -44,7 +44,7 @@ function ModalWithdraw() {
             </ModalHeader>
             <ModalBody>
                 <FormGroup>
-                    <FormLabel htmlFor='withdraWals'>Dinero a retirar</FormLabel>
+                    <FormLabel htmlFor='withdraWals'>Dinero que desea retirar</FormLabel>
                     <FormControl
                         id='withdraWals'
                         type='number'

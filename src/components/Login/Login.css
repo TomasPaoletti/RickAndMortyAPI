@@ -1,18 +1,22 @@
-.wrapper_register {
+.wrapper_login {
     background-color: white;
     border: solid 2px #202329;
     border-radius: 10px;
 }
 
-.wrapper_register .btn {
+.wrapper_login .btn-primary {
     background-color: #073c58;
     border: none;
 }
 
-.wrapper_register p{
+.wrapper_login .error {
     color: red;
 }
 
-.wrapper_register .btn:hover {
+.wrapper_login .btn:hover {
     background-color: #073c58;
+}
+
+.wrapper_login .google:hover {
+    cursor: pointer;
 }

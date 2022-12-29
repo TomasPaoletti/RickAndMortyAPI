@@ -11,7 +11,7 @@ import {
     ModalTitle
 } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
-import "./Modals.css"
+import "./Modals.css";
 
 function ModalPayLoan() {
 
@@ -39,12 +39,12 @@ function ModalPayLoan() {
         <Modal show={modalPayLoan}>
             <ModalHeader>
                 <ModalTitle>
-                    Pagar prestamo
+                    Pagar préstamo
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
                 <FormGroup>
-                    <FormLabel htmlFor='payLoan'>Dinero que desea enviar</FormLabel>
+                    <FormLabel htmlFor='payLoan'>Dinero que desea pagar</FormLabel>
                     <FormControl
                         id='payLoan'
                         type='number'

@@ -29,6 +29,7 @@ export default function AuthContext({ children }) {
     const [modalLoan, setModalLoan] = useState(false);
     const [modalPayLoan, setModalPayLoan] = useState(false);
     const [modalId, setModalId] = useState();
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -46,7 +47,7 @@ export default function AuthContext({ children }) {
 
     useEffect(() => {
         getUserApi()
-    }, [])
+    }, []);
 
     const register = async (email, password) =>
         await createUserWithEmailAndPassword(auth, email, password);
@@ -63,7 +64,7 @@ export default function AuthContext({ children }) {
         await signOut(auth);
 
     const getUserApi = async () => {
-        const characters = await API.getCharacters()
+        const characters = await API.getCharacters();
         let userObject = characters.results.map((item) => {
             return {
                 "id": item.id,
@@ -71,43 +72,50 @@ export default function AuthContext({ children }) {
                 "montoInicial": 0,
                 "prestamoPedido": 0
             }
-        })
-        const userJSON = JSON.stringify(userObject)
-        setjsonState(userJSON)
+        });
+        const userJSON = JSON.stringify(userObject);
+        setjsonState(userJSON);
     };
 
     const userList = () => {
-        const response = JSON.parse(jsonState)
-        setList(response)
+        const response = JSON.parse(jsonState);
+        setList(response);
     };
 
     const handleShowModalTransfer = (id) => {
         setModalTransfer(true)
         setModalId(id)
-    }
-    const handleCloseModalTransfer = () => setModalTransfer(false)
+    };
+
+    const handleCloseModalTransfer = () => setModalTransfer(false);
 
     const handleShowModalDeposit = (id) => {
         setModalDeposit(true)
         setModalId(id)
-    }
-    const handleCloseModalDeposit = () => setModalDeposit(false)
+    };
+
+    const handleCloseModalDeposit = () => setModalDeposit(false);
 
     const handleShowModalWithdraw = (id) => {
         setModalWithdraw(true)
         setModalId(id)
     }
-    const handleCloseModalWithdraw = () => setModalWithdraw(false)
+
+    const handleCloseModalWithdraw = () => setModalWithdraw(false);
+
     const handleShowModalLoan = (id) => {
         setModalLoan(true)
         setModalId(id)
-    }
-    const handleCloseModalLoan = () => setModalLoan(false)
+    };
+
+    const handleCloseModalLoan = () => setModalLoan(false);
+
     const handleShowModalPayLoan = (id) => {
         setModalPayLoan(true)
         setModalId(id)
-    }
-    const handleCloseModalPayLoan = () => setModalPayLoan(false)
+    };
+
+    const handleCloseModalPayLoan = () => setModalPayLoan(false);
 
     const getCredit = (price, idUser) => {
         const indexDelete = idUser - 1
@@ -127,14 +135,14 @@ export default function AuthContext({ children }) {
                 icon: "error",
             })
         }
-    }
+    };
 
     const getTransfer = (price, idTransfer, idUser) => {
         const indexDeleteUser = idUser - 1
         const indexDeleteTransfer = idTransfer - 1
         const user = list.find(x => x.id === idUser)
         const userTransfer = list.find(x => x.id === idTransfer)
-        if (user.montoInicial >= price && userTransfer != undefined){
+        if (user.montoInicial >= price && userTransfer != undefined) {
             user.montoInicial = user.montoInicial - price
             userTransfer.montoInicial = userTransfer.montoInicial + price
             list.splice(indexDeleteUser, 1, user)
@@ -145,13 +153,13 @@ export default function AuthContext({ children }) {
                 title: "Dinero transferido",
                 icon: "success",
             })
-        }else{
+        } else {
             Toast.fire({
                 title: "Dinero insuficiente",
                 icon: "error",
             })
         }
-    }
+    };
 
     const getWithdraw = (price, idUser) => {
         const indexDelete = idUser - 1
@@ -171,10 +179,10 @@ export default function AuthContext({ children }) {
                 icon: "error",
             })
         }
-    }
+    };
 
     const getLoan = (price, idUser) => {
-        const indexDelete = idUser - 1
+        const indexDelete = idUser - 1;
         try {
             const user = list.find(x => x.id == idUser)
             user.prestamoPedido = user.prestamoPedido + price
@@ -183,19 +191,19 @@ export default function AuthContext({ children }) {
             const userJSON = JSON.stringify(list)
             setjsonState(userJSON)
             Toast.fire({
-                title: "Prestamo solicitado",
+                title: "Préstamo solicitado",
                 icon: "success",
             })
         } catch {
             Toast.fire({
-                title: "Error al solicitar el prestamo",
+                title: "Error al solicitar el préstamo",
                 icon: "error",
             })
         }
     }
 
     const getPayLoan = (price, idUser) => {
-        const indexDelete = idUser - 1
+        const indexDelete = idUser - 1;
         const user = list.find(x => x.id == idUser)
         if (user.montoInicial >= price && user.prestamoPedido > 0) {
             user.montoInicial = user.montoInicial - price
@@ -213,7 +221,7 @@ export default function AuthContext({ children }) {
                 icon: "error",
             })
         }
-    }
+    };
 
     return (
         <authContext.Provider

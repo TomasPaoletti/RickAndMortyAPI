@@ -11,14 +11,14 @@ import {
     ModalTitle
 } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
-import "./Modals.css"
+import "./Modals.css";
 
 function ModalDeposit() {
 
     const { modalDeposit, handleCloseModalDeposit, getCredit, modalId } = useAuth();
     const [price, setPrice] = useState({
         "montoInicial": ""
-    })
+    });
 
     const priceChange = ({ target: { name, value } }) => {
         setPrice(currentValue => ({
@@ -33,8 +33,8 @@ function ModalDeposit() {
         setPrice({
             "montoInicial": ""
         })
-        
-    }
+
+    };
 
     return (
         <>

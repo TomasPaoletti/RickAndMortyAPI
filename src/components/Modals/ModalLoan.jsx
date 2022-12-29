@@ -11,7 +11,7 @@ import {
     ModalTitle
 } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
-import "./Modals.css"
+import "./Modals.css";
 
 function modalLoan() {
 
@@ -39,7 +39,7 @@ function modalLoan() {
         <Modal show={modalLoan}>
             <ModalHeader>
                 <ModalTitle>
-                    Solicitar prestamo
+                    Solicitar préstamo
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
