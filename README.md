@@ -20,6 +20,7 @@ Se realizó una petición a la API para extraer el id y el nombre de cada person
 - HTML
 - CSS
 - React.js
+- Redux Toolkit
 - Bootstrap-React
 - Firebase
 - React-Icons
