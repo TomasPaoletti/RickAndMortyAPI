@@ -1,16 +1,21 @@
 import React from 'react';
 import { Button, Container, Navbar } from 'react-bootstrap';
 import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { logout } from '../../reducers/UserExtraReducer';
+import { useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 export default function NavBar() {
 
-    const { user, logout } = useAuth();
+    const user = useSelector(state => state.user.user)
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout()
+        dispatch(logout())
+        navigate("/login")
     };
 
     if (user != null) {

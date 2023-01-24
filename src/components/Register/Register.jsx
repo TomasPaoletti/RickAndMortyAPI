@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { Button, Col, Container, Form, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../../reducers/UserExtraReducer';
 import Loader from '../Loader/Loader';
-import Swal from 'sweetalert2';
 import './Register.css'
 
 
@@ -13,18 +13,10 @@ function Register() {
         email: "",
         password: ""
     });
-    const [error, setError] = useState();
-    const [loading, setLoading] = useState(false);
-    const { register } = useAuth();
+    const error = useSelector(state => state.user.error)
+    const loading = useSelector(state => state.user.loading)
     const navigate = useNavigate();
-
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-    });
+    const dispatch = useDispatch()
 
     const handleChange = ({ target: { name, value } }) => {
         setUser(currentValue => ({
@@ -33,24 +25,10 @@ function Register() {
         }))
     };
 
-    const handleRegister = async (e) => {
+    const handleRegister = (e) => {
         e.preventDefault()
-        setError("")
-        setLoading(true)
-        try {
-            await register(user.email, user.password)
-            setLoading(false)
-            navigate("/")
-            Toast.fire({
-                title: "Registrado correctamente",
-                icon: "success",
-            })
-        } catch (error) {
-            setLoading(false)
-            if (error.code === "auth/email-already-in-use") {
-                setError("Este correo ya está registrado")
-            }
-        }
+        dispatch(register(user))
+        navigate("/")
     };
 
     if (loading === true) {

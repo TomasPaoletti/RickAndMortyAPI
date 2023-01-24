@@ -11,18 +11,24 @@ import {
     ModalHeader,
     ModalTitle
 } from 'react-bootstrap';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleCloseModalTransfer } from '../../reducers/modalSlice'
+import { getTransfer } from '../../reducers/actionsSlice';
 import "./Modals.css";
 
 function ModalTransfer() {
 
-    const { modalTransfer, handleCloseModalTransfer, modalId, list, getTransfer } = useAuth();
+    const dispatch = useDispatch()
+    const list = useSelector(state => state.actions.list)
+    const modal = useSelector(state => state.modal.transfer)
+    const id = useSelector(state => state.modal.id)
+
     const [price, setPrice] = useState({
         "montoTransferir": "",
-        "id": "",
+        "idTransfer": "",
     });
 
-    let buttonDisabled = !price.id || !price.montoTransferir;
+    let buttonDisabled = !price.idTransfer || !price.montoTransferir;
 
     const priceChange = ({ target: { name, value } }) => {
         setPrice(currentValue => ({
@@ -31,17 +37,22 @@ function ModalTransfer() {
         }))
     };
 
-    const handleTransfer = async () => {
-        await getTransfer(parseInt(price.montoTransferir), parseInt(price.id), modalId)
-        handleCloseModalTransfer()
+    const handleTransfer = () => {
+        const data = {
+            price: parseInt(price.montoTransferir),
+            id: id,
+            idTransfer: parseInt(price.idTransfer)
+        }
+        dispatch(getTransfer(data))
+        dispatch(handleCloseModalTransfer())
         setPrice({
             "montoTransferir": "",
-            "id": ""
+            "idTransfer": ""
         })
     };
 
     return (
-        <Modal show={modalTransfer}>
+        <Modal show={modal}>
             <ModalHeader>
                 <ModalTitle>
                     Transferir dinero
@@ -63,8 +74,8 @@ function ModalTransfer() {
                     <FormSelect
                         id='user'
                         size="sm"
-                        name='id'
-                        value={price.id}
+                        name='idTransfer'
+                        value={price.idTransfer}
                         onChange={priceChange}
                     >
                         <option value="">Elegir usuario</option>
@@ -81,7 +92,7 @@ function ModalTransfer() {
             </ModalBody>
             <ModalFooter>
                 <Button variant='primary' onClick={handleTransfer} disabled={buttonDisabled}>Transferir</Button>
-                <Button variant='secondary' onClick={handleCloseModalTransfer}>Cerrar</Button>
+                <Button variant='secondary' onClick={() => dispatch(handleCloseModalTransfer())}>Cerrar</Button>
             </ModalFooter>
         </Modal>
     )

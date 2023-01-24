@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useAuth } from '../../context/AuthContext';
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { BsArrowLeftRight } from "react-icons/bs";
 import { GiReceiveMoney, GiPayMoney } from "react-icons/gi";
 import { FaMoneyBill } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { getCharacters } from '../../API/index';
+import { useNavigate } from 'react-router-dom';
 import ActionButtons from './ActionButtons';
 import ModalDeposit from '../Modals/ModalDeposit';
 import ModalTransfer from '../Modals/ModalTransfer';
@@ -12,20 +14,31 @@ import ModalWithdraw from '../Modals/ModalWithdraw';
 import ModalLoan from '../Modals/ModalLoan';
 import ModalPayLoan from '../Modals/ModalPayLoan';
 import Loader from '../Loader/Loader';
+import {
+    handleShowModalDeposit,
+    handleShowModalTransfer,
+    handleShowModalWithdraw,
+    handleShowModalLoan,
+    handleShowModalPayLoan
+} from '../../reducers/modalSlice'
+
 
 function AvailableUsers() {
 
-    const { list,
-        userList,
-        handleShowModalDeposit,
-        handleShowModalTransfer,
-        handleShowModalWithdraw,
-        handleShowModalLoan,
-        handleShowModalPayLoan } = useAuth();
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const list = useSelector(state => state.actions.list)
+    const loading = useSelector(state => state.user.loading)
+    const user = useSelector(state => state.user.user)
 
     useEffect(() => {
-        userList()
-    }, []);
+        if (!loading && !user) {
+            return navigate("/login")
+        } else {
+            dispatch(getCharacters())
+        }
+    }, [loading, user]);
+
 
     if (list == null) {
         return <Loader />
@@ -55,32 +68,32 @@ function AvailableUsers() {
                                         <ActionButtons
                                             variant="primary"
                                             title="Consignación"
-                                            onClick={() => handleShowModalDeposit(item.id)}>
+                                            onClick={() => dispatch(handleShowModalDeposit(item.id))}>
                                             <AiOutlineArrowDown />
                                         </ActionButtons>
                                         <ActionButtons
                                             variant="secondary"
                                             title="Transferencia"
-                                            onClick={() => handleShowModalTransfer(item.id)}>
+                                            onClick={() => dispatch(handleShowModalTransfer(item.id))}>
                                             <BsArrowLeftRight />
                                         </ActionButtons>
                                         <ActionButtons
                                             variant="light"
                                             title='Retirar dinero'
-                                            onClick={() => handleShowModalWithdraw(item.id)}>
+                                            onClick={() => dispatch(handleShowModalWithdraw(item.id))}>
                                             <GiReceiveMoney />
                                         </ActionButtons>
                                         <ActionButtons
                                             variant="dark"
                                             title='Pedir préstamo'
-                                            onClick={() => handleShowModalLoan(item.id)}
+                                            onClick={() => dispatch(handleShowModalLoan(item.id))}
                                         >
                                             <FaMoneyBill />
                                         </ActionButtons>
                                         <ActionButtons
                                             variant="info"
                                             title='Pagar préstamo'
-                                            onClick={() => handleShowModalPayLoan(item.id)}
+                                            onClick={() => dispatch(handleShowModalPayLoan(item.id))}
                                         >
                                             <GiPayMoney />
                                         </ActionButtons>

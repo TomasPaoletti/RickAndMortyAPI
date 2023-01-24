@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { Button, Col, Container, Form, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, loginWithGoogle } from '../../reducers/UserExtraReducer';
 import { FcGoogle } from "react-icons/fc";
 import Loader from '../Loader/Loader';
-import Swal from 'sweetalert2';
 import "./Login.css"
 
 function Login() {
@@ -13,17 +13,10 @@ function Login() {
         email: "",
         password: ""
     });
-    const [error, setError] = useState();
-    const [loading, setLoading] = useState(false);
-    const { login, loginWithGoogle } = useAuth();
+    const error = useSelector(state => state.user.error)
+    const loading = useSelector(state => state.user.loading)
     const navigate = useNavigate();
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-    });
+    const dispatch = useDispatch()
 
     const handleChange = ({ target: { name, value } }) => {
         setUser(currentValue => ({
@@ -32,32 +25,15 @@ function Login() {
         }))
     };
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault()
-        setError("")
-        setLoading(true)
-        try {
-            await login(user.email, user.password)
-            setLoading(false)
-            navigate("/")
-            Toast.fire({
-                title: "Ingreso correcto",
-                icon: "success",
-            })
-        } catch (error) {
-            setLoading(false)
-            if (error.code === "auth/wrong-password") {
-                setError("Contrseña incorrecta")
-            }
-            if (error.code === "auth/user-not-found") {
-                setError("Correo incorrecto")
-            }
-        };
+        dispatch(login(user))
+        navigate("/")
     };
 
-    const handleGoogle = async (e) => {
+    const handleGoogle = (e) => {
         e.preventDefault()
-        await loginWithGoogle()
+        dispatch(loginWithGoogle())
         navigate("/")
     };
 

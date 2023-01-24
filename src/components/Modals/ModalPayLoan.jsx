@@ -10,12 +10,17 @@ import {
     ModalHeader,
     ModalTitle
 } from 'react-bootstrap';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleCloseModalPayLoan } from '../../reducers/modalSlice'
+import { getPayLoan } from '../../reducers/actionsSlice';
 import "./Modals.css";
 
 function ModalPayLoan() {
 
-    const { modalPayLoan, handleCloseModalPayLoan, getPayLoan, modalId } = useAuth();
+    const dispatch = useDispatch()
+    const modal = useSelector(state => state.modal.payLoan)
+    const id = useSelector(state => state.modal.id)
+
     const [price, setPrice] = useState({
         "payLoan": ""
     });
@@ -27,16 +32,20 @@ function ModalPayLoan() {
         }))
     };
 
-    const handlePayLoan = async () => {
-        await getPayLoan(parseInt(price.payLoan), modalId)
-        handleCloseModalPayLoan()
+    const handlePayLoan = () => {
+        const data = {
+            price: parseInt(price.payLoan),
+            id: id
+        }
+        dispatch(getPayLoan(data))
+        dispatch(handleCloseModalPayLoan())
         setPrice({
             "payLoan": ""
         })
     };
 
     return (
-        <Modal show={modalPayLoan}>
+        <Modal show={modal}>
             <ModalHeader>
                 <ModalTitle>
                     Pagar préstamo
@@ -56,7 +65,7 @@ function ModalPayLoan() {
             </ModalBody>
             <ModalFooter>
                 <Button variant='primary' onClick={handlePayLoan}>Pagar</Button>
-                <Button variant='secondary' onClick={handleCloseModalPayLoan}>Cerrar</Button>
+                <Button variant='secondary' onClick={() => dispatch(handleCloseModalPayLoan())}>Cerrar</Button>
             </ModalFooter>
         </Modal>
     )

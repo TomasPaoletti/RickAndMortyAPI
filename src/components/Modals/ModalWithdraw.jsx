@@ -10,12 +10,17 @@ import {
     ModalHeader,
     ModalTitle
 } from 'react-bootstrap';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleCloseModalWithdraw } from '../../reducers/modalSlice'
+import { getWithdraw } from '../../reducers/actionsSlice';
 import "./Modals.css";
 
 function ModalWithdraw() {
 
-    const { modalWithdraw, handleCloseModalWithdraw, getWithdraw, modalId } = useAuth();
+    const dispatch = useDispatch()
+    const modal = useSelector(state => state.modal.withdraw)
+    const id = useSelector(state => state.modal.id)
+
     const [price, setPrice] = useState({
         "withdraWals": ""
     });
@@ -27,16 +32,20 @@ function ModalWithdraw() {
         }))
     };
 
-    const handleWithdraw = async () => {
-        await getWithdraw(parseInt(price.withdraWals), modalId)
-        handleCloseModalWithdraw()
+    const handleWithdraw = () => {
+        const data = {
+            price: parseInt(price.withdraWals),
+            id: id
+        }
+        dispatch(getWithdraw(data))
+        dispatch(handleCloseModalWithdraw())
         setPrice({
             "withdraWals": ""
         })
     };
 
     return (
-        <Modal show={modalWithdraw}>
+        <Modal show={modal}>
             <ModalHeader>
                 <ModalTitle>
                     Retirar dinero
@@ -56,7 +65,7 @@ function ModalWithdraw() {
             </ModalBody>
             <ModalFooter>
                 <Button variant='primary' onClick={handleWithdraw}>Retirar</Button>
-                <Button variant='secondary' onClick={handleCloseModalWithdraw}>Cerrar</Button>
+                <Button variant='secondary' onClick={() => dispatch(handleCloseModalWithdraw())}>Cerrar</Button>
             </ModalFooter>
         </Modal>
     )

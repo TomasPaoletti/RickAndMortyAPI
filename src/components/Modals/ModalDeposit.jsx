@@ -10,12 +10,16 @@ import {
     ModalHeader,
     ModalTitle
 } from 'react-bootstrap';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleCloseModalDeposit } from '../../reducers/modalSlice'
+import { getCredit } from '../../reducers/actionsSlice';
 import "./Modals.css";
 
 function ModalDeposit() {
 
-    const { modalDeposit, handleCloseModalDeposit, getCredit, modalId } = useAuth();
+    const dispatch = useDispatch()
+    const modal = useSelector(state => state.modal.deposit)
+    const id = useSelector(state => state.modal.id)
     const [price, setPrice] = useState({
         "montoInicial": ""
     });
@@ -27,18 +31,23 @@ function ModalDeposit() {
         }))
     };
 
-    const handleDeposit = async () => {
-        await getCredit(parseInt(price.montoInicial), modalId)
-        handleCloseModalDeposit()
+    const handleDeposit = () => {
+        const data = {
+            price: parseInt(price.montoInicial),
+            id: id
+        }
+        dispatch(getCredit(data))
+        dispatch(handleCloseModalDeposit())
         setPrice({
             "montoInicial": ""
         })
 
     };
 
+
     return (
         <>
-            <Modal show={modalDeposit}>
+            <Modal show={modal}>
                 <ModalHeader>
                     <ModalTitle>
                         Acreditar dinero
@@ -58,7 +67,7 @@ function ModalDeposit() {
                 </ModalBody>
                 <ModalFooter>
                     <Button variant='primary' onClick={handleDeposit}>Acreditar</Button>
-                    <Button variant='secondary' onClick={handleCloseModalDeposit}>Cerrar</Button>
+                    <Button variant='secondary' onClick={() => dispatch(handleCloseModalDeposit())}>Cerrar</Button>
                 </ModalFooter>
             </Modal>
         </>
