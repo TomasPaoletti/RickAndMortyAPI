@@ -25,9 +25,9 @@ function Register() {
         }))
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault()
-        dispatch(register(user))
+        await dispatch(register(user))
         navigate("/")
     };
 

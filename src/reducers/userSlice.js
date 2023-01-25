@@ -23,6 +23,9 @@ const userSlice = createSlice({
         getCurrentUser: (state, { payload }) => {
             state.loading = false
             state.user = payload
+        },
+        loadingUser: (state, { payload }) => {
+            state.loading = payload
         }
     },
     extraReducers: {
@@ -87,6 +90,6 @@ const userSlice = createSlice({
     }
 });
 
-export const { getCurrentUser } = userSlice.actions
+export const { getCurrentUser, loadingUser } = userSlice.actions
 
 export default userSlice.reducer

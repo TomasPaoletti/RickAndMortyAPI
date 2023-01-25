@@ -25,15 +25,15 @@ function Login() {
         }))
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault()
-        dispatch(login(user))
+        await dispatch(login(user))
         navigate("/")
     };
 
-    const handleGoogle = (e) => {
+    const handleGoogle = async (e) => {
         e.preventDefault()
-        dispatch(loginWithGoogle())
+        await dispatch(loginWithGoogle())
         navigate("/")
     };
 

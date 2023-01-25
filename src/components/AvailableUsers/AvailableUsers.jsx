@@ -6,7 +6,6 @@ import { GiReceiveMoney, GiPayMoney } from "react-icons/gi";
 import { FaMoneyBill } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { getCharacters } from '../../API/index';
-import { useNavigate } from 'react-router-dom';
 import ActionButtons from './ActionButtons';
 import ModalDeposit from '../Modals/ModalDeposit';
 import ModalTransfer from '../Modals/ModalTransfer';
@@ -25,19 +24,12 @@ import {
 
 function AvailableUsers() {
 
-    const navigate = useNavigate();
     const dispatch = useDispatch()
     const list = useSelector(state => state.actions.list)
-    const loading = useSelector(state => state.user.loading)
-    const user = useSelector(state => state.user.user)
 
     useEffect(() => {
-        if (!loading && !user) {
-            return navigate("/login")
-        } else {
-            dispatch(getCharacters())
-        }
-    }, [loading, user]);
+        dispatch(getCharacters())
+    }, []);
 
 
     if (list == null) {
