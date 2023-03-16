@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyD8TJLB3gSpXzp1KJnvPSolFIHr0oynY7w',
+    apiKey: `${import.meta.env.VITE_API_KEY}`,
     authDomain: 'pruebatecnica-a5aa8.firebaseapp.com',
     projectId: 'pruebatecnica-a5aa8',
     storageBucket: 'pruebatecnica-a5aa8.appspot.com',
